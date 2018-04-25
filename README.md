@@ -1,2 +1,0 @@
-# FoodCraft
-Final OS Project
