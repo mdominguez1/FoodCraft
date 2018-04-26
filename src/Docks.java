@@ -9,9 +9,9 @@ import java.util.concurrent.Semaphore;
 public class Docks{
     
     /** static final variables to define the size for miners and materials*/
-    private static final SANDWHICH_SIZE = 3;
-    private static final NUM_MINERS = 3;
-    private static final SEMAPHORE_SIZE = 1;
+    private static final int SANDWHICH_SIZE = 3;
+    private static final int NUM_MINERS = 3;
+    private static final int SEMAPHORE_SIZE = 1;
 
     /** Array holding semaphores for the materials for sandwhiches*/
     private Semaphore[] materials;
@@ -19,8 +19,13 @@ public class Docks{
     /** Array holding semaphores for the miners to make the sandwhiches */
     private Semaphore[] miners;
     
-    /** Object that will send signal to the Message class from the Foreman*/
-    private Object messageSignal; 
+    /** Enum specifying the different types of miners*/
+    private enum Miner{
+        BREAD, CHEESE, BOLOGNA;
+    }//end enum
+    
+    /** Miner enum to show the next miner to make a sandwhich*/
+    private Miner curMiner = null;
     
     /**
      * Constructor that will provide initial set ups for the Docks class
@@ -29,7 +34,6 @@ public class Docks{
     protected Docks(){
         setMaterials();
         setMiners();
-        initializeSignal();
     }//end constructor
     
     /**
@@ -37,7 +41,7 @@ public class Docks{
      * materials which will be used
      *
      */
-    private void setMaterials(){
+    private final void setMaterials(){
         //Initialize the material array to hold Semaphores
         materials = new Semaphore[SANDWHICH_SIZE];
 
@@ -50,7 +54,7 @@ public class Docks{
      * helper method whcih will set all semaphores for the miners
      * to be restricted within their class
      */
-    private void setMiners(){
+    private final void setMiners(){
         //Initialize the miner array to hold Semaphores;
         miners = new Semaphore[SANDWHICH_SIZE];
 
@@ -75,4 +79,37 @@ public class Docks{
     protected Semaphore[] getMiners(){
         return miners;
     }//end getMiners()
+    
+    /**
+     * Set method for the messanger class to change the mienr which 
+     * will be
+     * @param - the miner to next make a sandwhich 
+     */
+    protected void setCurrentMiner(String miner){
+        if(miner.equals("Cheese")){
+            curMiner = Miner.CHEESE;
+        }else if(miner.equals("Bologna")){
+            curMiner = Miner.BOLOGNA;
+        }else if(miner.equals("Bread")){
+            curMiner = Miner.BREAD;
+        }//end if-else
+    }//end setCurrentMiner()
+    
+    /**
+     * Method to return an int correlating to the current miner 
+     * @return - 0 : if the current miner is Bread
+     *           1 : if the current miner is Cheese
+     *           2 : if the current miner is Bologna
+     *          -1 : if an error has occured
+     */
+    protected int getCurrentMiner(){
+        if(curMiner == Miner.BREAD){
+            return 0;
+        }else if(curMiner == Miner.CHEESE){
+            return 1;
+        }else if(curMiner == Miner.BOLOGNA){
+            return 2;
+        }//end if-else
+        return -1;
+    }//end getCurrentMiner
 }//end Docks
