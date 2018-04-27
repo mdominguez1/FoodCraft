@@ -24,6 +24,9 @@ public class Docks{
         BREAD, CHEESE, BOLOGNA;
     }//end enum
     
+    /** Array which hold the number of materials sent */
+    private int[] sent;
+    
     /** Miner enum to show the next miner to make a sandwhich*/
     private Miner curMiner = null;
     
@@ -48,6 +51,7 @@ public class Docks{
         for(int i = 0; i < SANDWHICH_SIZE; i++){
             materials[i] = new Semaphore(SEMAPHORE_SIZE);
         }//end for
+
     }//end setMaterials()
     
     /**
@@ -60,7 +64,7 @@ public class Docks{
 
         for(int i = 0; i <  NUM_MINERS; i++){
             miners[i] = new Semaphore(SEMAPHORE_SIZE);
-        }//for
+        }//end for
 
     }//end setMiners()
     
@@ -83,14 +87,17 @@ public class Docks{
     /**
      * Set method for the messanger class to change the mienr which 
      * will be
-     * @param - the miner to next make a sandwhich 
+     * @param check - number corresponding to what miner should be woken up
+     *                0 : Bread
+     *                1 : Cheese
+     *                2 : Bologna
      */
-    protected void setCurrentMiner(String miner){
-        if(miner.equals("Cheese")){
+    protected void setCurrentMiner(int check){
+        if(check == 1){
             curMiner = Miner.CHEESE;
-        }else if(miner.equals("Bologna")){
+        }else if(check == 2){
             curMiner = Miner.BOLOGNA;
-        }else if(miner.equals("Bread")){
+        }else if(check == 0){
             curMiner = Miner.BREAD;
         }//end if-else
     }//end setCurrentMiner()
@@ -112,4 +119,22 @@ public class Docks{
         }//end if-else
         return -1;
     }//end getCurrentMiner
+    
+    /**
+     * Method for the Foreman to send materials to the messanger
+     * @param sent - Array holding materials
+     *             sent[0] - Bread
+     *             sent[1] - Cheese
+     *             sent[2] - Bologna
+     */
+    protected void send(int[] sent){
+        
+        //check to see which item was not sent
+        for(int i = 0; i < sent.length; i++){
+            if(sent[i] == 0){
+               setCurrentMiner(i);
+            }//end if
+        }//end for
+
+    }//end send()
 }//end Docks

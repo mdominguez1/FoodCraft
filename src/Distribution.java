@@ -1,11 +1,11 @@
+import java.io.PrintStream;
+import java.io.File;
+
 /**
  * @Author - Melchor Dominguez, April Crawford
  * Driver which will start the sandwhich making process
  */
 public class Distribution{
-
-    /** boolean value to show if the output will be written to a file*/
-    private static boolean toFile;
     
     /** int to show how long the driver will be running until terminated */
     private static int time;
@@ -15,6 +15,9 @@ public class Distribution{
     
     /** Docks class which will hold everything regarding to shared memory for the threads*/
     private static Docks docks;
+
+    /** The new file where everything will be printed to if specified*/
+    private static final String newOut = "log.txt";
    
     /**
      * Main method that will accept two command line arguments
@@ -53,9 +56,9 @@ public class Distribution{
             }//end if
 
             if(args[1].equals("T")){
-                toFile = false;
+                //ignore
             }else if(args[1].equals("F")){
-                toFile = true;
+                changeOut();
             }else{
                 System.out.println("Invalid letter chosen for 2nd argument: must be T or F");
                 System.exit(ERROR);
@@ -70,5 +73,17 @@ public class Distribution{
     private static final void makeDocks(){
         docks = new Docks();
     }//end makeDocks();
+    
+    /**
+     * Method to change the direction of the standard out for system so that
+     * it writes to specified file
+     */
+    private static final void changeOut(){
+
+        //Creating a File object that will be written to 
+        PrintSteam newFile = new PrintStream(new File(newOut));
+
+        System.setOut(newFile);
+    }//end changeOut()
 
 }//end Distribution class
