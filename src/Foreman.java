@@ -1,22 +1,26 @@
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.Callable;
 /**
  * @Authors Melchor Dominguez, April Crawford
  *
- * The Foreman class is the master sandwich maker, kind of like the Avatar;
+ * The Foreman class is the master sandwich maker, kind of like the Avatar.
  * Instead of elements, this class masters the three sandwich materials: Bread,
- * Cheese, and Bologna; 
+ * Cheese, and Bologna. 
  *
  */
-
-import java.util.concurrent.*;
-
-public class Foreman implements Callable{
+public class Foreman implements Callable<Integer>{
     
     /** probability line that will handle which materials are made*/
     private double[] probabilityLine;
     
     /** The materials which will be sent off*/
     private int[] materials;
+
+    /** Docks class to communicate between the Foreman and Messanger*/
+    private Docks dock;
+    
+    /** status that will be returned by the Foreman to show success or failure*/
+    private int status;
     
     /** constant number of how many materials the foreman controls */
     private static final int NUM_MATERIALS = 3;
@@ -31,6 +35,7 @@ public class Foreman implements Callable{
      * to communicate with the messanger
      */
     public Foreman(Docks dock){
+        this.dock = dock;
         setProbabilityLine();
         setMaterials();
     }//end constructor
@@ -40,11 +45,12 @@ public class Foreman implements Callable{
      * the chance to pick a material
      */
     private final void setProbabilityLine(){
+        // Initialize the probability line size
         probabilityLine = new double[NUM_MATERIALS];
 
         //Set a number line to evenly distribute probability of materials
         for(int i = 0; i < NUM_MATERIALS; i++){
-            probabilityLine[0] = (double)((i+1) / NUM_MATERIALS);
+            probabilityLine[0] = ((double) (i+1) / (double) NUM_MATERIALS);
         }//end for
 
     }//end setProbabilityLine
@@ -71,10 +77,27 @@ public class Foreman implements Callable{
     
     /** 
      * Call method which will start the thread  
+     * @return - 1 : if the Foreman successfully sent materials
+     *           0 : if an error occured and materials are corrupt
      */
     public Integer call(){
         pickMaterials();
-        return null;
+
+        int count = 0;
+        for(int i : materials){
+            count += i;
+        }//end for
+
+        if(count == 2){
+            status = 1;
+            dock.send(materials);
+            System.out.println("success");
+        }else{
+            status = 0;
+            System.out.println("failure");
+        }//end if-else
+
+        return status;
     }//end call()
     
     /**
@@ -95,8 +118,27 @@ public class Foreman implements Callable{
     private void chooseOne(){
         /** random number used to gernerate */
         double rand = ThreadLocalRandom.current().nextDouble();
+        int material = -1;
+        for(int i = 0; i < materials.length; i++){
+            if(rand < probabilityLine[i]){
+                material = i;
+                break;
+            }//end if
+        }//end for
+        
+        //if material did not get a new value, print error message
+        if(material == -1){
+            System.out.println("Error in choosing material");
+            System.exit(material);
+        }//end if
 
+        //if material has already been chosen, choose again
+        if(materials[material] > 0){
+            System.out.println(material + " : material already chosen");
+            chooseOne();
+        }//end if
 
+        materials[material]++;
     }//end chooseOne()
 
 }//end Foreman class 
