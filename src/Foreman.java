@@ -7,7 +7,10 @@ import java.util.concurrent.ThreadLocalRandom;
  * Cheese, and Bologna; 
  *
  */
-public class Foreman implements Callable<int>{
+
+import java.util.concurrent.*;
+
+public class Foreman implements Callable{
     
     /** probability line that will handle which materials are made*/
     private double[] probabilityLine;
@@ -58,7 +61,7 @@ public class Foreman implements Callable<int>{
     /**
      * Method which will reset the number of materials to be sent out to zero
      */
-    private final clearMaterials(){
+    private final void clearMaterials(){
         
         //resets every material to be sent out to zero
         for(int i = 0; i < materials.length; i++){
@@ -69,8 +72,9 @@ public class Foreman implements Callable<int>{
     /** 
      * Call method which will start the thread  
      */
-    public int call(){
-        pickMaterials
+    public Integer call(){
+        pickMaterials();
+        return null;
     }//end call()
     
     /**
@@ -94,6 +98,5 @@ public class Foreman implements Callable<int>{
 
 
     }//end chooseOne()
-    
 
 }//end Foreman class 
