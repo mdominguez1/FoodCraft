@@ -24,5 +24,5 @@ public class ForemanTester{
             System.out.println(e.getMessage());
             e.printStackTrace();
         }//end try-catch
-    }
-}
+    }//end main()
+}//end ForemanTester

@@ -50,10 +50,21 @@ public class Foreman implements Callable<Integer>{
 
         //Set a number line to evenly distribute probability of materials
         for(int i = 0; i < NUM_MATERIALS; i++){
-            probabilityLine[0] = ((double) (i+1) / (double) NUM_MATERIALS);
+            probabilityLine[i] = ((double)(i+1)/(double)NUM_MATERIALS);
         }//end for
 
+        //printProbabilityLine();
+
     }//end setProbabilityLine
+    
+    /**
+     * Method to print probability line for debugging 
+     */
+    private void printProbabilityLine(){
+        for(int i = 0; i < NUM_MATERIALS; i++){
+            System.out.println(i + " : " + probabilityLine[i]);
+        }//end for
+    }//
     
     /**
      * Method which will prepare an array of materials to appoint
@@ -136,9 +147,10 @@ public class Foreman implements Callable<Integer>{
         if(materials[material] > 0){
             System.out.println(material + " : material already chosen");
             chooseOne();
-        }//end if
-
-        materials[material]++;
+        }else{
+            System.out.println(material);
+            materials[material]++;
+        }//end if-else
     }//end chooseOne()
 
 }//end Foreman class 
