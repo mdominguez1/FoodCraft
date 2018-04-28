@@ -1,40 +1,35 @@
 /**
+ * Bread Miner class, extends the abstract class Miner and implements the
+ * interface Callable.
  *
- *
- *
- *
+ * @author Melchor Dominguez and April Crawford
+ * @version 05/02/2018
  */
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.*;
 
-public class BreadMiner extends Miner implements Callable {
+public class BreadMiner extends Miner{
 
-private static final String name = "Bread";
+/**Name of miner supply*/
+private String bread = "Bread";                                                                     
 
-private Semaphore cheese;                                                                           
-private Semaphore bologna;                                                                            
-private Semaphore minerSupply;                                                                      
-                                                                                                    
-public BreadMiner(Semaphore material1, Semaphore material2, Semaphore supply) {                   
-                                                                                                    
-    this.cheese = material1;                                                                        
-    this.bologna = material2;                                                                         
-    this.minerSupply = supply;                                                                      
-                                                                                                    
-}
+/**
+ * Constructor sets three semaphors; two for needed materials and one for
+ * what the miners have access to.
+ *
+ * @param cheese semaphor for material needed for sandwich
+ * @param bologna semaphor for material needed for sandwich
+ * @param supply semaphor for material that miners have access to
+ */                                        
+public BreadMiner(Semaphore cheese, Semaphore bologna, Semaphore supply) {                   
+                                                                            
+    this.setMaterial1(cheese);                                                                        
+    this.setMaterial2(bologna);                                                                         
+    this.setMinerSupply(supply);   
+    this.setName(bread);
+                                                                                                                                                      
+}//end constructor
 
-public Integer call() {
-
-    //if given signal that supplies are ready
-    long makeTime = ThreadLocalRandom.current().nextLong(INC, EXC);
-    long eatTime = ThreadLocalRandom.current().nextLong(INC, EXC);
-
-    makeSandwiches(makeTime, name);
-    eatSandwiches(eatTime, name);
-
-    return 0;//return some int
-}
-
-}
+}//end Breadminer
