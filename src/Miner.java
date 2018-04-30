@@ -100,7 +100,9 @@ public void setMinerSupply(Semaphore minerSupply) {
  * @return 1 for call method was run and is finished                                                
  */                                                                                                 
 public Integer call() {                                                                             
-                                                                                                    
+    
+    minerSupply.release();
+                                      
     //if given signal that supplies are ready                                                       
     long makeTime = ThreadLocalRandom.current().nextLong(INC, EXC);                                 
     long eatTime = ThreadLocalRandom.current().nextLong(INC, EXC);                                  
@@ -108,9 +110,7 @@ public Integer call() {
     grabMaterials();                                                                                
                                                                                                     
     makeSandwiches(makeTime, name);                                                                 
-    eatSandwiches(eatTime, name);                                                                   
-                                                                                                    
-    minerSupply.release();                                                                          
+    eatSandwiches(eatTime, name);                                                                          
                                                                                                     
     return 1;//return some int to signal completion                                                                  
 }                                                                   
