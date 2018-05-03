@@ -10,32 +10,24 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.*;
 
-public class CheeseMiner extends Miner implements Callable {
+public class CheeseMiner extends Miner{
 
 private static final String name = "Cheese";
 
-private Semaphore bologna;                                                                           
-private Semaphore bread;                                                                            
-private Semaphore minerSupply;                                                                      
+/** integers for the miner to set the semaphore*/
+private static final int MATERIAL1 = 2;
+private static final int MATERIAL2 = 0;
+private static final int MINER = 1;                                                              
                                                                                                     
-public CheeseMiner(Semaphore material1, Semaphore material2, Semaphore supply) {                   
+public CheeseMiner(Docks docks) {
+    Semaphore[] materials = docks.getMaterials();
+    Semaphore[] miners = docks.getMiners();
+    this.setForeman(docks.getForeman());
+    
+    this.setMaterial1(materials[MATERIAL1]);
+    this.setMaterial2(materials[MATERIAL2]);
+    this.setMinerSupply(miners[MINER]);                                                                     
                                                                                                     
-    this.bologna = material1;                                                                        
-    this.bread = material2;                                                                         
-    this.minerSupply = supply;                                                                      
-                                                                                                    
-}
-
-public Integer call() {
-
-    //if given signal that supplies are ready
-    long makeTime = ThreadLocalRandom.current().nextLong(INC, EXC);
-    long eatTime = ThreadLocalRandom.current().nextLong(INC, EXC);
-
-    makeSandwiches(makeTime, name);
-    eatSandwiches(eatTime, name);
-
-    return 0;//return some int
 }
 
 }

@@ -24,6 +24,8 @@ private Semaphore material1;
 private Semaphore material2;
 /**Semaphore for the material the miners already have*/
 private Semaphore minerSupply;
+/** Semaphore for the foreman*/
+private Semaphore foremanSem;
 
 /**
  * Method takes a random time and makes sandwiches for a specific miner.
@@ -76,6 +78,15 @@ public void setMaterial1(Semaphore material1) {
 }
 
 /**
+ * Method which will set the foreman semaphore to notify the foreman
+ * when materials have been used
+ * @param foremanSem - the foreman semaphore
+ */
+public void setForeman(Semaphore foremanSem){
+    this.foremanSem = foremanSem;
+}
+
+/**
  * Method allows miner subclass to set the Semaphore for the second needed material.
  *
  * @param material2 Semaphore for the second needed sandwich material
@@ -101,7 +112,11 @@ public void setMinerSupply(Semaphore minerSupply) {
  */                                                                                                 
 public Integer call() {                                                                             
     
-    minerSupply.release();
+    try{
+        minerSupply.acquire();
+    }catch(InterruptedException e){
+        System.out.println("Interrupted Miner");
+    }
                                       
     //if given signal that supplies are ready                                                       
     long makeTime = ThreadLocalRandom.current().nextLong(INC, EXC);                                 
@@ -121,9 +136,14 @@ public Integer call() {
  */                                                                                                    
 private void grabMaterials() {                                                                      
                                                                                                     
-    material1.release();                                                                              
-    material2.release();                                                                               
-    System.out.println(name + " miners grabbed materials...");                                      
+    try{
+        material1.acquire();                                                                              
+        material2.acquire();
+    }catch(InterruptedException e){
+        System.out.println("Interrupted materials");
+    }
+    System.out.println(name + " miners grabbed materials...");
+    foremanSem.release();                                 
                                                                                                     
 }                                                                                            
                                                                                                     

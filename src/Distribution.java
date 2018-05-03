@@ -1,5 +1,13 @@
 import java.io.PrintStream;
 import java.io.File;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Executors;
+import java.io.FileNotFoundException;
 
 /**
  * @Author - Melchor Dominguez, April Crawford
@@ -15,9 +23,19 @@ public class Distribution{
     
     /** Docks class which will hold everything regarding to shared memory for the threads*/
     private static Docks docks;
+    
+    /** ExecutorCompletion Service to hold the threadpool*/
+    private static ExecutorCompletionService<Integer> complete;
+    
+    /** Thread pool to control the threads*/
+    private static ExecutorService pool;
 
     /** The new file where everything will be printed to if specified*/
     private static final String newOut = "log.txt";
+
+    /** The number of threads that will be running concurrently*/ 
+    private static final int NUM_THREADS = 5;
+
    
     /**
      * Main method that will accept two command line arguments
@@ -35,7 +53,9 @@ public class Distribution{
      */
     public static void main(String[] args){
         parseArgs(args);
-        makeDocks();    
+        makeDocks();
+        setPool();
+        getResults();
     }//end main()
     
     /**
@@ -81,9 +101,49 @@ public class Distribution{
     private static final void changeOut(){
 
         //Creating a File object that will be written to 
-        PrintSteam newFile = new PrintStream(new File(newOut));
+        try{
+            PrintStream newFile = new PrintStream(new File(newOut));
+            System.setOut(newFile);
+        }catch(FileNotFoundException e){
+            System.out.println("New output not found");
+        }
 
-        System.setOut(newFile);
     }//end changeOut()
+    
+    /**
+     * Sets up the initial pool for the threads
+     * 
+     */
+    private static final void setPool(){
+        ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
+        complete = new ExecutorCompletionService<Integer>(pool);
+
+        Callable<Integer> foreman = new Foreman(docks);
+        Callable<Integer> messenger = new Messenger(docks);
+        Callable<Integer> breadMiner = new BreadMiner(docks);
+        Callable<Integer> cheeseMiner = new CheeseMiner(docks);
+        Callable<Integer> bolognaMiner = new BolognaMiner(docks);
+        complete.submit(foreman);
+        complete.submit(messenger);
+        complete.submit(breadMiner);
+        complete.submit(cheeseMiner);
+        complete.submit(bolognaMiner);
+    }//end setPool()
+    
+    /**
+     * Parse through the results
+     */
+    private static final void getResults(){
+        for(int i = 0; i < NUM_THREADS; i++){
+            try{
+                Future<Integer> future = complete.take();
+                int returnForeman = future.get();
+            }catch(InterruptedException e){
+                System.out.println("Interrupted Future");
+            }catch(ExecutionException e){
+                System.out.println("Execution Error Future");
+            }
+        }//end for 
+    }//end getResults()
 
 }//end Distribution class

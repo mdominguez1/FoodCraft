@@ -9,32 +9,25 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.*;
 
-public class BolognaMiner extends Miner implements Callable {
+public class BolognaMiner extends Miner{
 
+/** Name of the miner supply */
 private static final String name = "Bologna";
 
-private Semaphore cheese;
-private Semaphore bread;
-private Semaphore minerSupply;
+/** integers for the miner to set the semaphores*/
+private static final int MATERIAL1 = 0;
+private static final int MATERIAL2 = 1;
+private static final int MINER = 2;
 
-public BolognaMiner(Semaphore material1, Semaphore material2, Semaphore supply) {
+public BolognaMiner(Docks docks){
+    
+    Semaphore[] materials = docks.getMaterials();
+    Semaphore[] miners = docks.getMiners();
+    this.setForeman(docks.getForeman());
 
-    this.cheese = material1;
-    this.bread = material2;
-    this.minerSupply = supply;
-
-}
-
-public Integer call() {
-
-    //if given signal that supplies are ready
-    long makeTime = ThreadLocalRandom.current().nextLong(INC, EXC);
-    long eatTime = ThreadLocalRandom.current().nextLong(INC, EXC);
-
-    makeSandwiches(makeTime, name);
-    eatSandwiches(eatTime, name);
-
-    return 0;//return some int
-}
+    this.setMaterial1(materials[MATERIAL1]);
+    this.setMaterial2(materials[MATERIAL2]);
+    this.setMinerSupply(miners[MINER]);
+}//end constructor
 
 }

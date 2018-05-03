@@ -11,8 +11,12 @@ public class Messenger implements Callable<Integer>{
 
     /** Array holding semaphores for the miners to make the sandwhiches*/
     private Semaphore[] miners;
-
+    
+    /** Docks class for reading materials*/
     private Docks docks;
+    
+    /** Semaphore for the messenger to know when to reach its critical section*/
+    private Semaphore messengerSem;
     
     /** numbered constants for the materials/miners*/
     private static final int BREAD = 0;
@@ -27,6 +31,7 @@ public class Messenger implements Callable<Integer>{
         materials = docks.getMaterials();
         miners = docks.getMiners();
         this.docks = docks;
+        messengerSem = docks.getMessenger();
     }//end Messanger 
     
     /**
@@ -35,22 +40,21 @@ public class Messenger implements Callable<Integer>{
      *            1 : if an error did not occur
      */
     public Integer call(){
+        try{
+            messengerSem.acquire();
+        }catch(InterruptedException e){
+            System.out.println("InterruptedException e");
+        }
+
         int miner = docks.getCurrentMiner();
         for(int i = 0; i < miners.length; i++){
             if(i == miner){
-                try{
-                    miners[i].acquire();
-                }catch(InterruptedException e){
-                    System.out.println("Interrupted ");
-                }//end try-catch
+                miners[i].release();
             }else{
-                try{
-                    materials[i].acquire();
-                }catch(InterruptedException e){
-                    System.out.println("Interrupted!");
-                }
+                materials[i].release();
             }//end if-else
         }//end for
+
         System.out.println("Send " + miner);
         return 1;
     }//end call

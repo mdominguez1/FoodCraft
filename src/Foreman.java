@@ -1,5 +1,6 @@
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Semaphore;
 /**
  * @Authors Melchor Dominguez, April Crawford
  *
@@ -21,6 +22,12 @@ public class Foreman implements Callable<Integer>{
     
     /** status that will be returned by the Foreman to show success or failure*/
     private int status;
+
+    /** Semaphore for the foreman to connect*/
+    private Semaphore foremanSem;
+    
+    /** Semaphore for the messenger to respond*/
+    private Semaphore messengerSem;
     
     /** constant number of how many materials the foreman controls */
     private static final int NUM_MATERIALS = 3;
@@ -38,6 +45,8 @@ public class Foreman implements Callable<Integer>{
         this.dock = dock;
         setProbabilityLine();
         setMaterials();
+        this.foremanSem = dock.getForeman();
+        this.messengerSem = dock.getMessenger();
     }//end constructor
     
     /**
@@ -55,7 +64,7 @@ public class Foreman implements Callable<Integer>{
 
         //printProbabilityLine();
 
-    }//end setProbabilityLine
+    }//end setProbabilityLine();
     
     /**
      * Method to print probability line for debugging 
@@ -64,7 +73,7 @@ public class Foreman implements Callable<Integer>{
         for(int i = 0; i < NUM_MATERIALS; i++){
             System.out.println(i + " : " + probabilityLine[i]);
         }//end for
-    }//
+    }//end printProbabilityLine()
     
     /**
      * Method which will prepare an array of materials to appoint
@@ -84,6 +93,7 @@ public class Foreman implements Callable<Integer>{
         for(int i = 0; i < materials.length; i++){
             materials[i] = 0;
         }//end for
+
     }//end clearMaterials()
     
     /** 
@@ -92,6 +102,12 @@ public class Foreman implements Callable<Integer>{
      *           0 : if an error occured and materials are corrupt
      */
     public Integer call(){
+        try{
+            foremanSem.acquire();
+        }catch(InterruptedException e){
+            System.out.println("foreman semaphore interrupted");
+        }//end try-catch
+
         pickMaterials();
 
         int count = 0;
@@ -102,6 +118,7 @@ public class Foreman implements Callable<Integer>{
         if(count == 2){
             status = 1;
             dock.send(materials);
+            messengerSem.release();
             System.out.println("success");
         }else{
             status = 0;

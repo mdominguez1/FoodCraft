@@ -19,6 +19,12 @@ public class Docks{
     /** Array holding semaphores for the miners to make the sandwhiches */
     private Semaphore[] miners;
     
+    /** Semaphore for the foreman to send materials */
+    private Semaphore foremanSem;
+    
+    /** Semaphore for the messenger to notify miners*/
+    private Semaphore messengerSem;
+    
     /** Enum specifying the different types of miners*/
     private enum Miner{
         BREAD, CHEESE, BOLOGNA;
@@ -37,8 +43,30 @@ public class Docks{
     protected Docks(){
         setMaterials();
         setMiners();
+        setCommunication();
+        acquireAll();
     }//end constructor
     
+    /**
+     * Method to block all semaphores 
+     */
+    private final void acquireAll(){
+        try{
+            for(Semaphore sem: materials){
+                sem.acquire();
+            }//end for
+
+            for(Semaphore sem: miners){
+                sem.acquire();
+            }///end for
+    
+            foremanSem.acquire();
+            messengerSem.acquire();
+        }catch(InterruptedException e){
+            System.out.println("InterruptedException");
+        }
+    }//end acquireAll()
+
     /**
      * Helper method which will set all semaphores for the 
      * materials which will be used
@@ -68,6 +96,14 @@ public class Docks{
 
     }//end setMiners()
     
+    /** 
+     * Method to set further communication for Messanger and Foreman
+     */
+    private final void setCommunication(){
+        messengerSem = new Semaphore(SEMAPHORE_SIZE);
+        foremanSem = new Semaphore(SEMAPHORE_SIZE);
+    }//end setCommunication
+    
     /**
      * Helper method to return the Materials semaphore 
      * @return - material semaphore
@@ -84,6 +120,22 @@ public class Docks{
         return miners;
     }//end getMiners()
     
+    /**
+     * Return the foreman semaphore
+     * @return - the miner semaphore
+     */
+    protected Semaphore getForeman(){
+        return foremanSem;
+    }//end getForeman()
+    
+    /**
+     * Returns the messenger semaphore
+     * @return - the messenger semaphore 
+     */
+    protected Semaphore getMessenger(){
+        return messengerSem;
+    }//end getMessenger
+
     /**
      * Set method for the messanger class to change the mienr which 
      * will be
