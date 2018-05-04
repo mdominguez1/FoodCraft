@@ -36,6 +36,9 @@ public class Foreman implements Callable<Integer>{
     
     /** constatnt number of how many materials will be sent off */
     private static final int SEND_OFF = 2;
+    
+    /** Maximum time for waiting to send materials*/
+    private static final long MAX = 3000;
 
     /**
      * Constructor which will prepare the foreman to decide who gets to eat,
@@ -100,34 +103,34 @@ public class Foreman implements Callable<Integer>{
     
     /** 
      * Call method which will start the thread  
-     * @return - 0 : if the Foreman successfully sent materials
+     * @return - 
      *           -1 : if an error occured and materials are corrupt
      */
     public Integer call(){
-        try{
-            foremanSem.acquire();
-        }catch(InterruptedException e){
-            System.out.println("Foreman went home without sending materials");
-            return -1;
-        }//end try-catch
+        while(true){
+            try{
+                foremanSem.acquire();
+                Thread.sleep(ThreadLocalRandom.nextLong(MAX));
+            }catch(InterruptedException e){
+                System.out.println("Foreman went home without sending materials");
+                return -1;
+            }//end try-catch
 
-        pickMaterials();
+            pickMaterials();
 
-        int count = 0;
-        for(int i : materials){
-            count += i;
-        }//end for
+            int count = 0;
+            for(int i : materials){
+                count += i;
+            }//end for
 
-        if(count == 2){
-            status = 0;
-            dock.send(materials);
-            messengerSem.release();
-            System.out.println("Foreman has sent out the materials.");
-        }else{
-            status = -1;
-            System.out.println("Foreman failed to send materials");
-        }//end if-else
-
+            if(count == 2){
+                dock.send(materials);
+                messengerSem.release();
+                System.out.println("Foreman has sent out the materials.");
+            }else{
+                System.out.println("Foreman failed to send materials");
+            }//end if-else
+        }
         return status;
     }//end call()
     

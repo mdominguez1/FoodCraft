@@ -21,21 +21,24 @@ import miners.BolognaMiner;
  * Driver which will start the sandwhich making process
  */
 public class Distribution{
-    
+
     /** int to show how long the driver will be running until terminated */
     private static long time;
 
     /** integer to exit out of the system whenever an error has occured*/
     private static final int ERROR = -1;
-    
+
     /** Docks class which will hold everything regarding to shared memory for the threads*/
     private static Docks docks;
-    
+
     /** ExecutorCompletion Service to hold the threadpool*/
     private static ExecutorCompletionService<Integer> complete;
-    
+
     /** Thread pool to control the threads*/
     private static ExecutorService pool;
+
+    /** Checks whether to run the process infinitely */
+    private static boolean isPos;
 
     /** The new file where everything will be printed to if specified*/
     private static final String newOut = "log.txt";
@@ -49,7 +52,7 @@ public class Distribution{
     private static Future<Integer> currentCheeseMiner;
     private static Future<Integer> currentBolognaMiner;
 
-   
+
     /**
      * Main method that will accept two command line arguments
      * @param args - The command line arguments to take
@@ -65,15 +68,12 @@ public class Distribution{
      * No zombie processed. 
      */
     public static void main(String[] args){
-        System.out.println("start");
         parseArgs(args);
-        System.out.println("making docks");
         makeDocks();
-        System.out.println("setting the pool");
         setPool();
         getResults();
     }//end main()
-    
+
     /**
      * Helper method for the main class to parse through the command line
      * arguments.
@@ -86,11 +86,11 @@ public class Distribution{
         }else{
 
             time = Long.parseLong(args[0]);
-            System.out.println(time);
-            if(time < 0){
-                System.out.println("Invalid time to run, must be positive");
-                System.exit(ERROR);
-            }//end if
+            if(time <= 0){
+                isPos = false;
+            }else{
+                isPos = true;
+            }
 
             if(args[1].equals("T")){
                 //ignore
@@ -102,7 +102,7 @@ public class Distribution{
             }//ennd if-else
         }//end if-else
     }//end parseArgs()
-    
+
     /**
      * Helper method to initialize the dock field for the main method 
      * and to debug docks class if needed
@@ -110,7 +110,7 @@ public class Distribution{
     private static final void makeDocks(){
         docks = new Docks();
     }//end makeDocks();
-    
+
     /**
      * Method to change the direction of the standard out for system so that
      * it writes to specified file
@@ -123,16 +123,16 @@ public class Distribution{
             System.setOut(newFile);
         }catch(FileNotFoundException e){
             System.out.println("New output not found");
+            System.exit(ERROR);
         }
 
     }//end changeOut()
-    
+
     /**
      * Sets up the initial pool for the threads
      * 
      */
     private static final void setPool(){
-        System.out.println("Setting up the Threadpool");
         pool = Executors.newFixedThreadPool(NUM_THREADS);
         complete = new ExecutorCompletionService<Integer>(pool);
 
@@ -148,7 +148,7 @@ public class Distribution{
         currentBolognaMiner = complete.submit(bolognaMiner);
         //pool.shutdown();
     }//end setPool()
-    
+
     /**
      * Parse through the results
      */
@@ -173,34 +173,27 @@ public class Distribution{
                 System.out.println("Interrupted Future");
             }catch(ExecutionException e){
                 System.out.println("Execution Error Future");
-            }
-            System.out.println("System Time: " + (System.nanoTime() / Math.pow(10,12)));
-            System.out.println("Check Time: " + (time * Math.pow(10,15))); 
-           /* if(System.nanoTime() >= (long)(time*Math.pow(10,15))){
-                System.out.println(System.nanoTime()*Math.pow(10,12));
-                System.out.println("I'm going to stop everything!!!!!!!");
-                break;
-            }*/
-            if(System.currentTimeMillis() >= (startTime + (time * 1000))){
-                System.out.println(System.currentTimeMillis());
-                System.out.println("breaking !");
-                break;
-            }    
+            }//end try-catch
+
+            /* if(System.nanoTime() >= (long)(time*Math.pow(10,15))){
+               System.out.println(System.nanoTime()*Math.pow(10,12));
+               System.out.println("I'm going to stop everything!!!!!!!");
+               break;
+               }*/
+            if(isPos){
+                if(System.currentTimeMillis() >= (startTime + (time * 1000))){
+                    break;
+                }// end if    
+            }//end if
         }//end for
         pool.shutdown();
         System.out.println("cancelling processes...");
-        boolean check1 = currentForeman.cancel(true);
-        boolean check2 = currentMessenger.cancel(true);
-        boolean check3 = currentBreadMiner.cancel(true);
-        boolean check4 = currentCheeseMiner.cancel(true);
-        boolean check5 = currentBolognaMiner.cancel(true);
-        //pool.shutdown();
-        if(check1 == false)
-            System.out.println("Foreman failure");
-        if(check2 == false){
-            System.out.println("Messenger failure");
-        }
+        currentForeman.cancel(true);
+        currentMessenger.cancel(true);
+        currentBreadMiner.cancel(true);
+        currentCheeseMiner.cancel(true);
+        currentBolognaMiner.cancel(true);
     }//end getResults()
-    
+
 
 }//end Distribution class

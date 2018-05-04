@@ -1,0 +1,26 @@
+# Assignment 3: FoodCraft 
+# Authors: Melchor Dominguez & April Crawford 
+# Version : 5.4.16
+#
+# The FoodCraft mining expedition that has landed on the planet Banquatari to mine
+# food stuffs to sell to a galaxy teaming with explorers and colonists. The mining 
+# expedition is a large operation. The teams have been divided into groups:
+#   Bread Miners : This group of miners have set up camp in the Wonder Valley mining bread.
+#   Cheese Miners : This group of miners have set up camp in the Colby Plains and mine cheese.
+#   Bologna Miners : This group of miners have set up camp in Os'cermayer Canyon and mine bologna.
+#   The Foreman : This person coordinates supply drops at the central dock.
+#   The Messengers : This group monitors the situation and can perform tallies and send messages
+#                    to miners.
+# 
+# The Foreman will drop off two of the three types of supplies at the docks.
+# The group of miners will try and get them from the docks and make sandwhiches for themselves 
+#   to eat.
+# The messangers can carry messages and supplies to the miners, but not to the foreman.
+#
+# To test the function:
+#   1. Go to the src directory
+#   2. javac main/Distribution.java
+#   3. java main.Distribution <Time> <T/F> where:
+#       a. Time is the number in seconds which the function will run
+#       b. T/F refers to true or false if the function prints to screen
+#           - if false, the function will print to log.txt

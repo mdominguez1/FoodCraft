@@ -57,8 +57,6 @@ public class Messenger implements Callable<Integer>{
                     materials[i].release();
                 }//end if-else
             }//end for
-
-            System.out.println("Send " + miner);
         }catch (InterruptedException e){
             System.out.println("Messenger will not notify any miners");
             return -1;
