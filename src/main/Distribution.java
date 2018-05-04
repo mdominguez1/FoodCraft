@@ -1,3 +1,5 @@
+package main;
+
 import java.io.PrintStream;
 import java.io.File;
 import java.util.concurrent.Callable;
@@ -7,7 +9,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Executors;
+import java.util.List;
 import java.io.FileNotFoundException;
+import miners.BreadMiner;
+import miners.Miner;
+import miners.CheeseMiner;
+import miners.BolognaMiner;
 
 /**
  * @Author - Melchor Dominguez, April Crawford
@@ -16,7 +23,7 @@ import java.io.FileNotFoundException;
 public class Distribution{
     
     /** int to show how long the driver will be running until terminated */
-    private static int time;
+    private static long time;
 
     /** integer to exit out of the system whenever an error has occured*/
     private static final int ERROR = -1;
@@ -36,6 +43,12 @@ public class Distribution{
     /** The number of threads that will be running concurrently*/ 
     private static final int NUM_THREADS = 5;
 
+    private static Future<Integer> currentForeman;
+    private static Future<Integer> currentMessenger;
+    private static Future<Integer> currentBreadMiner;
+    private static Future<Integer> currentCheeseMiner;
+    private static Future<Integer> currentBolognaMiner;
+
    
     /**
      * Main method that will accept two command line arguments
@@ -52,8 +65,11 @@ public class Distribution{
      * No zombie processed. 
      */
     public static void main(String[] args){
+        System.out.println("start");
         parseArgs(args);
+        System.out.println("making docks");
         makeDocks();
+        System.out.println("setting the pool");
         setPool();
         getResults();
     }//end main()
@@ -69,7 +85,8 @@ public class Distribution{
             System.exit(ERROR);
         }else{
 
-            time = Integer.parseInt(args[0]);
+            time = Long.parseLong(args[0]);
+            System.out.println(time);
             if(time < 0){
                 System.out.println("Invalid time to run, must be positive");
                 System.exit(ERROR);
@@ -115,7 +132,8 @@ public class Distribution{
      * 
      */
     private static final void setPool(){
-        ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
+        System.out.println("Setting up the Threadpool");
+        pool = Executors.newFixedThreadPool(NUM_THREADS);
         complete = new ExecutorCompletionService<Integer>(pool);
 
         Callable<Integer> foreman = new Foreman(docks);
@@ -123,27 +141,66 @@ public class Distribution{
         Callable<Integer> breadMiner = new BreadMiner(docks);
         Callable<Integer> cheeseMiner = new CheeseMiner(docks);
         Callable<Integer> bolognaMiner = new BolognaMiner(docks);
-        complete.submit(foreman);
-        complete.submit(messenger);
-        complete.submit(breadMiner);
-        complete.submit(cheeseMiner);
-        complete.submit(bolognaMiner);
+        currentForeman = complete.submit(foreman);
+        currentMessenger = complete.submit(messenger);
+        currentBreadMiner = complete.submit(breadMiner);
+        currentCheeseMiner = complete.submit(cheeseMiner);
+        currentBolognaMiner = complete.submit(bolognaMiner);
+        //pool.shutdown();
     }//end setPool()
     
     /**
      * Parse through the results
      */
     private static final void getResults(){
-        for(int i = 0; i < NUM_THREADS; i++){
+        docks.getForeman().release();
+        long startTime = System.currentTimeMillis();
+        for(int i = 0; ; i++){
             try{
                 Future<Integer> future = complete.take();
-                int returnForeman = future.get();
+                int threadNum = future.get();
+                if(threadNum == 0)
+                    currentForeman = complete.submit(new Foreman(docks));
+                if(threadNum == 1)
+                    currentMessenger = complete.submit(new Messenger(docks));
+                if(threadNum == 2)
+                    currentBreadMiner = complete.submit(new BreadMiner(docks));
+                if(threadNum == 3)
+                    currentCheeseMiner = complete.submit(new CheeseMiner(docks));
+                if(threadNum == 4)
+                    currentBolognaMiner = complete.submit(new BolognaMiner(docks));
             }catch(InterruptedException e){
                 System.out.println("Interrupted Future");
             }catch(ExecutionException e){
                 System.out.println("Execution Error Future");
             }
-        }//end for 
+            System.out.println("System Time: " + (System.nanoTime() / Math.pow(10,12)));
+            System.out.println("Check Time: " + (time * Math.pow(10,15))); 
+           /* if(System.nanoTime() >= (long)(time*Math.pow(10,15))){
+                System.out.println(System.nanoTime()*Math.pow(10,12));
+                System.out.println("I'm going to stop everything!!!!!!!");
+                break;
+            }*/
+            if(System.currentTimeMillis() >= (startTime + (time * 1000))){
+                System.out.println(System.currentTimeMillis());
+                System.out.println("breaking !");
+                break;
+            }    
+        }//end for
+        pool.shutdown();
+        System.out.println("cancelling processes...");
+        boolean check1 = currentForeman.cancel(true);
+        boolean check2 = currentMessenger.cancel(true);
+        boolean check3 = currentBreadMiner.cancel(true);
+        boolean check4 = currentCheeseMiner.cancel(true);
+        boolean check5 = currentBolognaMiner.cancel(true);
+        //pool.shutdown();
+        if(check1 == false)
+            System.out.println("Foreman failure");
+        if(check2 == false){
+            System.out.println("Messenger failure");
+        }
     }//end getResults()
+    
 
 }//end Distribution class

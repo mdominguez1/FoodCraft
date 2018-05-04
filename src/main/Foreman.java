@@ -1,3 +1,5 @@
+package main;
+
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
@@ -98,14 +100,15 @@ public class Foreman implements Callable<Integer>{
     
     /** 
      * Call method which will start the thread  
-     * @return - 1 : if the Foreman successfully sent materials
-     *           0 : if an error occured and materials are corrupt
+     * @return - 0 : if the Foreman successfully sent materials
+     *           -1 : if an error occured and materials are corrupt
      */
     public Integer call(){
         try{
             foremanSem.acquire();
         }catch(InterruptedException e){
-            System.out.println("foreman semaphore interrupted");
+            System.out.println("Foreman went home without sending materials");
+            return -1;
         }//end try-catch
 
         pickMaterials();
@@ -116,13 +119,13 @@ public class Foreman implements Callable<Integer>{
         }//end for
 
         if(count == 2){
-            status = 1;
+            status = 0;
             dock.send(materials);
             messengerSem.release();
-            System.out.println("success");
+            System.out.println("Foreman has sent out the materials.");
         }else{
-            status = 0;
-            System.out.println("failure");
+            status = -1;
+            System.out.println("Foreman failed to send materials");
         }//end if-else
 
         return status;
@@ -162,10 +165,8 @@ public class Foreman implements Callable<Integer>{
 
         //if material has already been chosen, choose again
         if(materials[material] > 0){
-            System.out.println(material + " : material already chosen");
             chooseOne();
         }else{
-            System.out.println(material);
             materials[material]++;
         }//end if-else
     }//end chooseOne()

@@ -1,3 +1,5 @@
+package main;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
 /**
@@ -42,20 +44,25 @@ public class Messenger implements Callable<Integer>{
     public Integer call(){
         try{
             messengerSem.acquire();
-        }catch(InterruptedException e){
-            System.out.println("InterruptedException e");
+        
+            //System.out.println("Messenger will not notify any miners");
+            //return -1;
+        
+            System.out.println("Messenger will notify miners soon....");
+            int miner = docks.getCurrentMiner();
+            for(int i = 0; i < miners.length; i++){
+                if(i == miner){
+                    miners[i].release();
+                }else{
+                    materials[i].release();
+                }//end if-else
+            }//end for
+
+            System.out.println("Send " + miner);
+        }catch (InterruptedException e){
+            System.out.println("Messenger will not notify any miners");
+            return -1;
         }
-
-        int miner = docks.getCurrentMiner();
-        for(int i = 0; i < miners.length; i++){
-            if(i == miner){
-                miners[i].release();
-            }else{
-                materials[i].release();
-            }//end if-else
-        }//end for
-
-        System.out.println("Send " + miner);
         return 1;
     }//end call
 }//end Messanger class

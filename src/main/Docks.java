@@ -1,3 +1,5 @@
+package main;
+
 import java.util.concurrent.Semaphore;
 
 /**
@@ -108,7 +110,7 @@ public class Docks{
      * Helper method to return the Materials semaphore 
      * @return - material semaphore
      */
-    protected Semaphore[] getMaterials(){
+    public Semaphore[] getMaterials(){
         return materials;
     }//end getMaterials()
     
@@ -116,7 +118,7 @@ public class Docks{
      * Helper method to return the Miner semaphore
      * @return - miner semaphores
      */
-    protected Semaphore[] getMiners(){
+    public Semaphore[] getMiners(){
         return miners;
     }//end getMiners()
     
@@ -124,7 +126,7 @@ public class Docks{
      * Return the foreman semaphore
      * @return - the miner semaphore
      */
-    protected Semaphore getForeman(){
+    public Semaphore getForeman(){
         return foremanSem;
     }//end getForeman()
     
@@ -132,7 +134,7 @@ public class Docks{
      * Returns the messenger semaphore
      * @return - the messenger semaphore 
      */
-    protected Semaphore getMessenger(){
+    public Semaphore getMessenger(){
         return messengerSem;
     }//end getMessenger
 
