@@ -153,12 +153,18 @@ public class Distribution{
      * Parse through the results
      */
     private static final void getResults(){
+        boolean breakout = true;
+
         docks.getForeman().release();
         long startTime = System.currentTimeMillis();
-        for(int i = 0; ; i++){
+        while(breakout){
+            //System.out.println("STILL WORKING");
+            /**
             try{
-                Future<Integer> future = complete.take();
-                int threadNum = future.get();
+                //Future<Integer> future = complete.take();
+                //int threadNum = future.get();
+                //System.out.println("threadNum returned! " + threadNum);
+                /**
                 if(threadNum == 0)
                     currentForeman = complete.submit(new Foreman(docks));
                 if(threadNum == 1)
@@ -169,11 +175,15 @@ public class Distribution{
                     currentCheeseMiner = complete.submit(new CheeseMiner(docks));
                 if(threadNum == 4)
                     currentBolognaMiner = complete.submit(new BolognaMiner(docks));
+                    
+                //if(threadNum == -1)
+                  //  System.out.println("Something returned a bad status");
+                   // breakout = false;;
             }catch(InterruptedException e){
                 System.out.println("Interrupted Future");
             }catch(ExecutionException e){
                 System.out.println("Execution Error Future");
-            }//end try-catch
+            }//end try-catch*/
 
             /* if(System.nanoTime() >= (long)(time*Math.pow(10,15))){
                System.out.println(System.nanoTime()*Math.pow(10,12));
@@ -182,10 +192,11 @@ public class Distribution{
                }*/
             if(isPos){
                 if(System.currentTimeMillis() >= (startTime + (time * 1000))){
-                    break;
+                    System.out.println("Overtime!");
+                    breakout = false;
                 }// end if    
             }//end if
-        }//end for
+        }//end while
         pool.shutdown();
         System.out.println("cancelling processes...");
         currentForeman.cancel(true);

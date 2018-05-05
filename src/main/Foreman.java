@@ -107,12 +107,13 @@ public class Foreman implements Callable<Integer>{
      *           -1 : if an error occured and materials are corrupt
      */
     public Integer call(){
-        while(true){
+        while(status != -1){
             try{
                 foremanSem.acquire();
-                Thread.sleep(ThreadLocalRandom.nextLong(MAX));
+                Thread.sleep(ThreadLocalRandom.current().nextLong(MAX));
             }catch(InterruptedException e){
                 System.out.println("Foreman went home without sending materials");
+                status = -1;
                 return -1;
             }//end try-catch
 
@@ -129,6 +130,7 @@ public class Foreman implements Callable<Integer>{
                 System.out.println("Foreman has sent out the materials.");
             }else{
                 System.out.println("Foreman failed to send materials");
+                status = -1;
             }//end if-else
         }
         return status;

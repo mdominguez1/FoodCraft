@@ -126,7 +126,7 @@ public abstract class Miner implements Callable<Integer>{
      * @return 1 for call method was run and is finished                                                
      */                                                                                                 
     public Integer call() {                                                                             
-
+        while(status != -1) {
         try{
             minerSupply.acquire();
         }catch(InterruptedException e){
@@ -145,7 +145,7 @@ public abstract class Miner implements Callable<Integer>{
             return -1;   
         }
         eatSandwiches(eatTime, name);                                                                          
-
+        }
         return status;//return some int to signal completion                                                                  
     }                                                                   
 

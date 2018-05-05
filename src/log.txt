@@ -1,179 +1,21 @@
-making docks
-setting the pool
-Setting up the Threadpool
 Foreman has sent out the materials.
 Messenger will notify miners soon....
-Send 0
+Bologna miners grabbed materials...
+Bologna miners are making sandwiches!
+Bologna miners are eating sandwiches!
+Foreman has sent out the materials.
+Messenger will notify miners soon....
 Bread miners grabbed materials...
 Bread miners are making sandwiches!
-Foreman has sent out the materials.
-System Time: 1740.118583422092
-Check Time: 3.0E16
-System Time: 1740.118585488342
-Check Time: 3.0E16
-System Time: 1740.118585572855
-Check Time: 3.0E16
-Messenger will notify miners soon....
-Send 1
-System Time: 1740.118585878125
-Check Time: 3.0E16
-Cheese miners grabbed materials...
-Cheese miners are making sandwiches!
-Foreman has sent out the materials.
-Messenger will notify miners soon....
-Send 0
-System Time: 1740.118586477932
-Check Time: 3.0E16
-System Time: 1740.118586700358
-Check Time: 3.0E16
-Cheese miners are eating sandwiches!
 Bread miners are eating sandwiches!
-System Time: 1740.120414904422
-Check Time: 3.0E16
-System Time: 1740.122062246809
-Check Time: 3.0E16
-Bread miners grabbed materials...
-Bread miners are making sandwiches!
 Foreman has sent out the materials.
 Messenger will notify miners soon....
-Send 2
-System Time: 1740.122062602666
-Check Time: 3.0E16
-System Time: 1740.122062704205
-Check Time: 3.0E16
 Bologna miners grabbed materials...
 Bologna miners are making sandwiches!
-Foreman has sent out the materials.
-Messenger will notify miners soon....
-Send 0
-System Time: 1740.12206321052
-Check Time: 3.0E16
-System Time: 1740.122063351828
-Check Time: 3.0E16
-Bologna miners are eating sandwiches!
-Bread miners are eating sandwiches!
-System Time: 1740.125999768181
-Check Time: 3.0E16
-Bread miners grabbed materials...
-Bread miners are making sandwiches!
-Foreman has sent out the materials.
-Messenger will notify miners soon....
-Send 0
-System Time: 1740.126000100866
-Check Time: 3.0E16
-System Time: 1740.126000302274
-Check Time: 3.0E16
-System Time: 1740.126140425947
-Check Time: 3.0E16
-Bread miners are eating sandwiches!
-System Time: 1740.129635293089
-Check Time: 3.0E16
-Bread miners grabbed materials...
-Bread miners are making sandwiches!
-Foreman has sent out the materials.
-Messenger will notify miners soon....
-Send 2
-System Time: 1740.129635573016
-Check Time: 3.0E16
-Bologna miners grabbed materials...
-Bologna miners are making sandwiches!
-Foreman has sent out the materials.
-System Time: 1740.129635723676
-Messenger will notify miners soon....
-Check Time: 3.0E16
-Cheese miners grabbed materials...
-Send 1
-Foreman has sent out the materials.
-Cheese miners are making sandwiches!
-System Time: 1740.129636101966
-Check Time: 3.0E16
-System Time: 1740.129636427448
-Check Time: 3.0E16
-Messenger will notify miners soon....
-System Time: 1740.129636513723
-Send 0
-Check Time: 3.0E16
-System Time: 1740.129636678555
-Check Time: 3.0E16
-Bread miners are eating sandwiches!
-Bologna miners are eating sandwiches!
-Cheese miners are eating sandwiches!
-System Time: 1740.132144129245
-Check Time: 3.0E16
-System Time: 1740.132462862946
-Check Time: 3.0E16
-Bread miners grabbed materials...
-Bread miners are making sandwiches!
-Foreman has sent out the materials.
-Messenger will notify miners soon....
-System Time: 1740.132463140853
-Send 2
-Check Time: 3.0E16
-Bologna miners grabbed materials...
-System Time: 1740.132463348052
-Foreman has sent out the materials.
-Messenger will notify miners soon....
-Bologna miners are making sandwiches!
-Send 2
-Check Time: 3.0E16
-System Time: 1740.132463773799
-Check Time: 3.0E16
-System Time: 1740.132463864954
-Check Time: 3.0E16
-System Time: 1740.133607744138
-Check Time: 3.0E16
-Bread miners are eating sandwiches!
-Bologna miners are eating sandwiches!
-System Time: 1740.136480402129
-Check Time: 3.0E16
-System Time: 1740.137636068153
-Bologna miners grabbed materials...
-Bologna miners are making sandwiches!
-Foreman has sent out the materials.
-Messenger will notify miners soon....
-Send 2
-Check Time: 3.0E16
-System Time: 1740.137636400477
-Check Time: 3.0E16
-System Time: 1740.137636475788
-Check Time: 3.0E16
-Bologna miners are eating sandwiches!
-System Time: 1740.142662541888
-Check Time: 3.0E16
-Bologna miners grabbed materials...
-Bologna miners are making sandwiches!
-Foreman has sent out the materials.
-Messenger will notify miners soon....
-Send 2
-System Time: 1740.142662789585
-Check Time: 3.0E16
-System Time: 1740.14266287606
-Check Time: 3.0E16
-Bologna miners are eating sandwiches!
-System Time: 1740.146966065189
-Bologna miners grabbed materials...
-Check Time: 3.0E16
-Bologna miners are making sandwiches!
-Foreman has sent out the materials.
-Messenger will notify miners soon....
-Send 2
-System Time: 1740.146966440386
-Check Time: 3.0E16
-System Time: 1740.146966522572
-Check Time: 3.0E16
-Bologna miners are eating sandwiches!
-System Time: 1740.150007668768
-Check Time: 3.0E16
-1525451030594
-Bologna miners grabbed materials...
-breaking !
-Messenger will notify miners soon....
-Send 2
-Foreman has sent out the materials.
-Bologna miners are making sandwiches!
+Overtime!
 cancelling processes...
-Foreman failure
-Messenger failure
-Bread miner can no longer continue :(
-Cheese miner can no longer continue :(
+Foreman went home without sending materials
+Breadminers have to stop eating sandwhiches :(
 Bolognaminers were unable to finish making sandwiches :(
+Messenger will not notify any miners
+Cheese miner can no longer continue :(

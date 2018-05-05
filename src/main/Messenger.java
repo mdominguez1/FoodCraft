@@ -25,6 +25,9 @@ public class Messenger implements Callable<Integer>{
     private static final int CHEESE = 1;
     private static final int BOLOGNA = 2;
 
+    /** Integer for status of messenger */
+    private Integer status;
+
     /**
      * Constructor for messanger where Semaphores are gathered
      * @param docks - locations for the semaphores 
@@ -34,6 +37,7 @@ public class Messenger implements Callable<Integer>{
         miners = docks.getMiners();
         this.docks = docks;
         messengerSem = docks.getMessenger();
+        status = 1;
     }//end Messanger 
     
     /**
@@ -42,6 +46,7 @@ public class Messenger implements Callable<Integer>{
      *            1 : if an error did not occur
      */
     public Integer call(){
+        while(status != -1) {
         try{
             messengerSem.acquire();
         
@@ -59,8 +64,9 @@ public class Messenger implements Callable<Integer>{
             }//end for
         }catch (InterruptedException e){
             System.out.println("Messenger will not notify any miners");
-            return -1;
+            status = -1;
         }
-        return 1;
+        }
+        return status;
     }//end call
 }//end Messanger class
